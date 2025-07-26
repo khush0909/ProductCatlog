@@ -20,6 +20,7 @@ urlpatterns = [
     # This view now handles both adding and removing from wishlist
     path('wishlist/add_to_cart/<int:product_id>/', views.add_to_cart_from_wishlist, name='add_to_cart_from_wishlist'),
     path('wishlist/toggle/<int:product_id>/', views.toggle_wishlist, name='add_remove_wishlist'),
+    path('wishlist/add/<int:product_id>/', views.add_to_wishlist, name='add_to_wishlist'),
 
 
     # User Profile & Orders URLs

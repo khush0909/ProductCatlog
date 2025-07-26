@@ -1,120 +1,110 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}{{ product.pr_name }} - ChazeFashion{% endblock title %}
-
 {% block content %}
-<div class="animate-fadeIn">
-    {% if product %}
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 bg-gray-800 p-8 rounded-lg shadow-xl border border-gray-700">
-        <!-- Product Image Gallery -->
-        <div class="flex flex-col items-center">
-            <img src="{% if product.pr_images %}{{ product.pr_images.url }}{% else %}https://placehold.co/600x600/4a5568/e2e8f0?text=Product+Image{% endif %}" alt="{{ product.pr_name }}" class="w-full max-w-lg h-auto object-cover rounded-lg shadow-md mb-4">
-            <!-- Small image thumbnails (if multiple images exist) -->
-            <div class="flex space-x-2 overflow-x-auto no-scrollbar">
-                <img src="https://placehold.co/100x100/4a5568/e2e8f0?text=Thumb1" alt="Thumbnail 1" class="w-20 h-20 object-cover rounded-md cursor-pointer border-2 border-transparent hover:border-pink-400 transition duration-300">
-                <img src="https://placehold.co/100x100/4a5568/e2e8f0?text=Thumb2" alt="Thumbnail 2" class="w-20 h-20 object-cover rounded-md cursor-pointer border-2 border-transparent hover:border-pink-400 transition duration-300">
-                <img src="https://placehold.co/100x100/4a5568/e2e8f0?text=Thumb3" alt="Thumbnail 3" class="w-20 h-20 object-cover rounded-md cursor-pointer border-2 border-transparent hover:border-pink-400 transition duration-300">
-                <!-- Add more thumbnails as needed, possibly from product.images_set -->
-            </div>
+<div class="container mx-auto p-4">
+    <div class="flex flex-col lg:flex-row gap-8 bg-base-200 rounded-lg shadow-xl p-6">
+        <!-- Product Image Section -->
+        <div class="lg:w-1/2 flex justify-center items-center">
+            {% if product.pr_images %}
+            <img src="{{ product.pr_images.url }}" alt="{{ product.pr_name }}"
+                class="w-full h-auto max-h-96 object-contain rounded-lg shadow-md">
+            {% else %}
+            <img src="https://placehold.co/400x400/cccccc/333333?text=No+Image" alt="No Image Available"
+                class="w-full h-auto max-h-96 object-contain rounded-lg shadow-md">
+            {% endif %}
         </div>
 
-        <!-- Product Details -->
-        <div class="flex flex-col justify-center">
-            <h1 class="text-4xl md:text-5xl font-extrabold text-white mb-4 leading-tight">{{ product.pr_name }}</h1>
-            <p class="text-gray-400 text-lg mb-4">{{ product.pr_cate }}</p>
-
-            <div class="flex items-center mb-6">
-                <span class="text-pink-400 font-bold text-5xl">${{ product.pr_price|floatformat:2 }}</span>
-                {# Uncomment and use these if you add original_price and discount_percentage fields to your Product model #}
-                {# <span class="text-gray-500 line-through ml-4 text-xl">${{ product.original_price|default:''|floatformat:2 }}</span> #}
-                {# {% if product.discount_percentage %} #}
-                {# <span class="ml-4 text-green-400 text-lg font-semibold">{{ product.discount_percentage }}% Off</span> #}
-                {# {% endif %} #}
-            </div>
-
-            <p class="text-gray-300 leading-relaxed mb-6">
-                {{ product.pr_description|default:'A high-quality product designed for comfort and style. Perfect for any occasion, offering durability and a premium feel.' }}
+        <!-- Product Details Section -->
+        <div class="lg:w-1/2 space-y-4">
+            <h1 class="text-4xl font-bold text-primary">{{ product.pr_name }}</h1>
+            <p class="text-xl text-secondary-content">Category: <span class="font-semibold">{{ product.pr_cate }}</span>
             </p>
+            <p class="text-3xl font-extrabold text-accent">₹{{ product.pr_price }}</p>
 
-            <div class="mb-6">
-                <h3 class="text-lg font-semibold text-white mb-2">Available Sizes:</h3>
-                <div class="flex flex-wrap gap-2">
-                    {# This section assumes a method 'available_sizes_list' exists on your Product model #}
-                    {# or you have a field like pr_sizes (e.g., CharField or JSONField) that you can iterate over. #}
-                    {# For now, using a placeholder list. #}
-                    {% comment %}
-                    If you have a pr_sizes field that is a string like "S,M,L", you could do:
-                    {% for size in product.pr_sizes.split(',') %}
-                        <button class="btn btn-sm bg-gray-700 hover:bg-gray-600 text-white border border-gray-600 rounded-md px-4 py-2 hover-effect">
-                            {{ size|strip }}
-                        </button>
-                    {% endfor %}
-                    {% endcomment %}
-                    <span class="text-gray-500 text-sm">No sizes available.</span> {# Default if no sizes are dynamically provided #}
-                </div>
+            <div class="text-base-content space-y-2">
+                <p><strong>Description:</strong> {% if product.pr_description %}{{ product.pr_description }}{% else %}No
+                    description available.{% endif %}</p>
+                <p><strong>Stock:</strong> <span
+                        class="font-semibold {% if product.pr_stk_quant > 0 %}text-success{% else %}text-error{% endif %}">{{
+                        product.pr_stk_quant }} in stock</span></p>
+                <p><strong>Reviews:</strong> {{ product.pr_reviews|floatformat:1 }} ({{ product.pr_buy_quant }} sales)
+                </p>
+                {% if product.pr_dimensions %}<p><strong>Dimensions:</strong> {{ product.pr_dimensions }}</p>{% endif %}
+                {% if product.pr_weights %}<p><strong>Weight:</strong> {{ product.pr_weights }}</p>{% endif %}
+                {% if product.pr_offers %}<p><strong>Offers:</strong> {{ product.pr_offers }}</p>{% endif %}
+                {% if product.pr_season %}<p><strong>Season:</strong> {{ product.pr_season }}</p>{% endif %}
+                {% if product.pr_fabric %}<p><strong>Fabric:</strong> {{ product.pr_fabric }}</p>{% endif %}
+                {% if product.pr_texture %}<p><strong>Texture:</strong> {{ product.pr_texture }}</p>{% endif %}
+                {% if product.pr_brand %}<p><strong>Brand:</strong> {{ product.pr_brand }}</p>{% endif %}
             </div>
 
-            <div class="mb-8">
-                <h3 class="text-lg font-semibold text-white mb-2">Quantity:</h3>
-                <input type="number" value="1" min="1" class="w-24 px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 text-white text-center focus:outline-none focus:ring-2 focus:ring-pink-400">
-            </div>
-
-            <div class="flex flex-col sm:flex-row gap-4">
-                <form action="{% url 'add_to_cart' product_id=product.pr_id %}" method="post" class="flex-1">
+            <!-- Action Buttons -->
+            <div class="flex flex-col sm:flex-row gap-4 mt-6">
+                <!-- Add to Cart Form -->
+                <form action="{% url 'add_to_cart' product.pr_id %}" method="post" class="w-full sm:w-auto">
                     {% csrf_token %}
-                    <button type="submit" class="w-full btn bg-pink-600 hover:bg-pink-700 text-white font-bold py-3 rounded-lg shadow-md transform transition duration-300 hover:scale-105 hover-effect">
+                    <button type="submit"
+                        class="btn btn-primary btn-lg w-full rounded-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300">
                         <i class="fas fa-shopping-cart mr-2"></i> Add to Cart
                     </button>
                 </form>
-                <form action="{% url 'add_to_wishlist' product_id=product.pr_id %}" method="post" class="flex-1">
+
+                <form action="{% url 'add_to_wishlist' product.pr_id %}" method="post" class="w-full sm:w-auto">
                     {% csrf_token %}
-                    <button type="submit" class="w-full btn bg-gray-700 hover:bg-gray-600 text-white font-bold py-3 rounded-lg shadow-md transform transition duration-300 hover:scale-105 hover-effect">
+                    <button type="submit"
+                        class="btn btn-secondary btn-lg w-full rounded-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300">
                         <i class="fas fa-heart mr-2"></i> Add to Wishlist
                     </button>
                 </form>
+
+                <!-- Messages Display -->
+                {% if messages %}
+                <div class="mt-4">
+                    {% for message in messages %}
+                    <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %} shadow-lg mb-2">
+                        <div>
+                            <i class="fas fa-info-circle"></i>
+                            <span>{{ message }}</span>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
             </div>
         </div>
-    </div>
 
-    <!-- Related Products Section (Example) -->
-    <section class="mt-16 animate-fadeIn" style="animation-delay: 0.2s;">
-        <h2 class="text-3xl font-bold text-white mb-8 text-center">You Might Also Like</h2>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {% for related_product in related_products %}
-            <!-- Related Product Card -->
-            <div class="bg-gray-800 rounded-lg shadow-lg overflow-hidden transform transition duration-300 hover:scale-105 hover-effect">
-                <a href="{% url 'product_detail' product_id=related_product.pr_id %}">
-                    <img src="{% if related_product.pr_images %}{{ related_product.pr_images.url }}{% else %}https://placehold.co/400x400/4a5568/e2e8f0?text=Related+Product{% endif %}" alt="{{ related_product.pr_name }}" class="w-full h-64 object-cover">
-                </a>
-                <div class="p-4">
-                    <h3 class="text-lg font-semibold text-white mb-1">{{ related_product.pr_name }}</h3>
-                    <p class="text-gray-400 text-sm mb-2">{{ related_product.pr_cate }}</p>
-                    <div class="flex items-center justify-between">
-                        <span class="text-pink-400 font-bold text-xl">${{ related_product.pr_price|floatformat:2 }}</span>
-                        <form action="{% url 'add_to_cart' product_id=related_product.pr_id %}" method="post">
-                            {% csrf_token %}
-                            <button type="submit" class="btn btn-sm bg-pink-600 hover:bg-pink-700 text-white rounded-full px-4 py-2 flex items-center space-x-2">
-                                <i class="fas fa-shopping-cart"></i>
-                                <span>Add</span>
-                            </button>
-                        </form>
+        <!-- Related Products Section -->
+        {% if related_products %}
+        <div class="mt-12">
+            <h2 class="text-3xl font-bold text-center text-primary mb-6">Related Products</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                {% for p in related_products %}
+                <div
+                    class="card card-compact w-full bg-base-100 shadow-xl image-full rounded-lg overflow-hidden transform transition-transform duration-300 hover:scale-105">
+                    <figure>
+                        {% if p.pr_images %}
+                        <img src="{{ p.pr_images.url }}" alt="{{ p.pr_name }}" class="w-full h-48 object-cover">
+                        {% else %}
+                        <img src="https://placehold.co/400x300/cccccc/333333?text=No+Image" alt="No Image Available"
+                            class="w-full h-48 object-cover">
+                        {% endif %}
+                    </figure>
+                    <div class="card-body justify-end">
+                        <h2 class="card-title text-white text-2xl">{{ p.pr_name }}</h2>
+                        <p class="text-white text-lg font-semibold">₹{{ p.pr_price }}</p>
+                        <div class="card-actions justify-end">
+                            <a href="{% url 'product_detail' p.pr_id %}"
+                                class="btn btn-primary btn-sm rounded-full">View
+                                Details</a>
+                        </div>
                     </div>
                 </div>
+                {% endfor %}
             </div>
-            {% endfor %}
         </div>
-    </section>
+        {% endif %}
 
-    {% else %}
-        <div class="text-center py-16 bg-gray-800 rounded-lg shadow-xl border border-gray-700">
-            <i class="fas fa-exclamation-circle text-6xl text-gray-500 mb-6"></i>
-            <p class="text-xl text-gray-300 mb-4">Product not found.</p>
-            <p class="text-gray-400">The product you are looking for might not exist or is unavailable.</p>
-            <a href="{% url 'product_list' %}" class="btn bg-pink-600 hover:bg-pink-700 text-white font-bold py-3 px-8 rounded-full shadow-lg transform transition duration-300 hover:scale-105 hover-effect mt-8">
-                Back to Products
-            </a>
-        </div>
-    {% endif %}
-</div>
-{% endblock content %}
+    </div>
+    {% endblock %}

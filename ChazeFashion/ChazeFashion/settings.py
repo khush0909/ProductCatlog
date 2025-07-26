@@ -42,7 +42,6 @@ INSTALLED_APPS = [
     'tailwind',
     'theme',
     'catalog',
-    'cart',
 
 ]
 
@@ -68,7 +67,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'catalog.context_processors.cart_item_count',
+                'catalog.context_processors.catalog_context',
             ],
         },
     },
